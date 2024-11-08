@@ -6,7 +6,8 @@ import '../datos/datos_user.dart';
 //para las consultas por http
 const ipOdoo = 'http://192.168.0.5:8069/jsonrpc/'; 
 const dbName = 'prueba';
-const int superid = 2;        
+const int superid = 2;      
+const superPassword = '1234';  
 
 //Roles
 const int estudiante = 65;    

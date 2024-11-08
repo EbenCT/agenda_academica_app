@@ -62,7 +62,7 @@ class AuthService {
         "method": "execute_kw",
         "args": [
           dbName,
-          userId,                       // ID del usuario autenticado
+          superid,                       // ID del usuario autenticado
           password,                     // Contraseña del usuario
           "res.users",                  // Modelo en Odoo para los usuarios
           "read",                       // Método para leer detalles
@@ -90,12 +90,12 @@ class AuthService {
           List<dynamic> groups = jsonResponse["result"][0]["groups_id"];
 
           // Verifica el tipo de usuario con base en el contenido de groups_id
-          if (groups.contains(55)) {
-            return 55;  //estudiante
-          } else if (groups.contains(56)) {
-            return 56;  //padre/representante
-          } else if (groups.contains(57)) {
-            return 57;  //profesor
+          if (groups.contains(estudiante)) {
+            return estudiante;  //estudiante
+          } else if (groups.contains(representante)) {
+            return representante;  //padre/representante
+          } else if (groups.contains(profesor)) {
+            return profesor;  //profesor
           } else {
             return 1;   //admin
           }

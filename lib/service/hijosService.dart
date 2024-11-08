@@ -19,7 +19,7 @@ class HijosService {
         "method": "execute_kw",
         "args": [
           dbName,
-          userId,
+          superid,
           userPassword,
           "academy.parent",
           "search_read",
@@ -62,7 +62,7 @@ class HijosService {
         "method": "execute_kw",
         "args": [
           dbName,
-          userId,
+          superid,
           userPassword,
           "academy.enrollment",
           "search_read",

@@ -32,7 +32,7 @@ class DataStudent {
   // Método para actualizar los datos del estudiante
   void setData(Map<String, dynamic> data) {
     studentId = data['id'];
-    image = data['image'];
+    image = data['image'].toString();
     enrollmentIds = List<int>.from(data['enrollment_ids'] ?? []);
     name = data['name'];
     identification = data['identification'];

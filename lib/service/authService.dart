@@ -23,7 +23,7 @@ class AuthService {
       },
       "id": 1
     };
-
+    print(requestBody);
     try {
       // Realizar la solicitud POST
       final response = await http.post(

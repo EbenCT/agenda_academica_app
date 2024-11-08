@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:agenda_academica/utils/variables.dart';
 import 'package:http/http.dart' as http;
 
+import '../datos/datos_estudiante.dart';
+
 class AuthService {
 
   Future<int?> login(String email, String password) async {
@@ -63,7 +65,7 @@ class AuthService {
         "args": [
           dbName,
           superid,                       // ID del usuario autenticado
-          password,                     // Contraseña del usuario
+          superPassword,                     // Contraseña del usuario
           "res.users",                  // Modelo en Odoo para los usuarios
           "read",                       // Método para leer detalles
           [[userId]],                   // ID del usuario cuyo rol se desea verificar
@@ -91,6 +93,7 @@ class AuthService {
 
           // Verifica el tipo de usuario con base en el contenido de groups_id
           if (groups.contains(estudiante)) {
+            saveDataStudent(userId);
             return estudiante;  //estudiante
           } else if (groups.contains(representante)) {
             return representante;  //padre/representante
@@ -110,6 +113,48 @@ class AuthService {
     } catch (e) {
       print("Error de conexión: $e");
       return 0;
+    }
+  }
+
+  Future<void> saveDataStudent(int userId) async {
+    final url = Uri.parse(ipOdoo);
+
+    final requestBody = {
+      "jsonrpc": "2.0",
+      "method": "call",
+      "params": {
+        "service": "object",
+        "method": "execute_kw",
+        "args": [
+          dbName,         // Nombre de la base de datos
+          superid,        // ID del usuario autenticado
+          superPassword,   // Contraseña del usuario
+          "academy.student",  // Modelo en Odoo
+          "search_read",      // Método para leer datos
+          [[["user_id", "=", userId]]]
+        ]
+      },
+      "id": 1
+    };
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> result = data["result"];
+
+      if (result.isNotEmpty) {
+        final studentData = result[0];
+
+        // Guardar los datos del estudiante en DataStudent
+        DataStudent().setData(studentData);
+      }
+    } else {
+      throw Exception('Failed to fetch student data');
     }
   }
 }

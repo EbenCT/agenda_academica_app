@@ -34,7 +34,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
 
   Future<void> _fetchEvents() async {
     try {
-      _apiEvents = await eventService.fetchEvents();
+      _apiEvents = await eventService.fetchFilteredEvents();
       _updateSelectedEvents();
     } catch (e) {
       print("Error al cargar eventos: $e");

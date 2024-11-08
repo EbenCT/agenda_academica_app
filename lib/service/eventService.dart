@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../utils/variables.dart';
-import '../models/events.dart';
+import '../models/events.dart'; // Asegúrate de que DataUser tenga userRole y userId
 
 class EventService {
-
-  // Obtiene los eventos de la API de Odoo
-  Future<List<Event>> fetchEvents() async {
+  // Obtiene los eventos de la API de Odoo y los filtra según el tipo de usuario
+  Future<List<Event>> fetchFilteredEvents() async {
     final url = Uri.parse(ipOdoo);
 
     final requestBody = {
@@ -16,11 +15,11 @@ class EventService {
         "service": "object",
         "method": "execute_kw",
         "args": [
-          dbName,         // Nombre de la base de datos
-          superid,              // ID del usuario autenticado
-          userPassword,         // Contraseña del usuario
-          "academy.event",  // Modelo en Odoo
-          "search_read",    // Método para leer datos
+          dbName,          // Nombre de la base de datos
+          superid,         // ID del usuario autenticado
+          superPassword,    // Contraseña del usuario
+          "academy.event", // Modelo en Odoo
+          "search_read",   // Método para leer datos
           [],
           {
             "fields": [
@@ -30,7 +29,13 @@ class EventService {
               "event_type",
               "priority",
               "state",
-              "description"
+              "description",
+              "creator_type",
+              "is_admin_event",
+              "is_teacher_event",
+              "teacher_ids",
+              "student_ids",
+              "course_ids"
             ]
           }
         ]
@@ -48,7 +53,7 @@ class EventService {
       final data = jsonDecode(response.body);
       final List<dynamic> result = data["result"];
 
-      return result.map((eventData) {
+      final List<Event> allEvents = result.map((eventData) {
         final name = eventData['name'] ?? 'Sin título';
         final start = DateTime.parse(eventData['start_date']);
         final end = DateTime.parse(eventData['end_date']);
@@ -56,6 +61,12 @@ class EventService {
         final priority = eventData['priority'];
         final state = eventData['state'];
         final description = eventData['description'].toString();
+        final creatorType = eventData['creator_type'];
+        final isAdminEvent = eventData['is_admin_event'] ?? false;
+        final isTeacherEvent = eventData['is_teacher_event'] ?? false;
+        final teacherIds = List<int>.from(eventData['teacher_ids'] ?? []);
+        final studentIds = List<int>.from(eventData['student_ids'] ?? []);
+        final courseIds = List<int>.from(eventData['course_ids'] ?? []);
 
         return Event(
           title: name,
@@ -65,10 +76,39 @@ class EventService {
           priority: priority,
           state: state,
           description: description,
+          creatorType: creatorType,
+          isAdminEvent: isAdminEvent,
+          isTeacherEvent: isTeacherEvent,
+          teacherIds: teacherIds,
+          studentIds: studentIds,
+          courseIds: courseIds,
         );
       }).toList();
+
+      // Filtrado de eventos según el rol del usuario
+      final filteredEvents = _filterEventsByUserRole(allEvents);
+
+      return filteredEvents;
     } else {
       throw Exception('Failed to load events');
     }
+  }
+
+  List<Event> _filterEventsByUserRole(List<Event> events) {
+
+    return events.where((event) {
+      if (userRole == 1) { // Administrador
+        return event.isAdminEvent || event.creatorType == 'admin';
+      } else if (userRole == profesor) { // Profesor
+        return event.isTeacherEvent ||
+            event.creatorType == 'teacher' ||
+            event.teacherIds.contains(userId);
+      } else if (userRole == estudiante) { // Estudiante
+        return event.creatorType == 'student' ||
+            event.studentIds.contains(userId);// ||
+           // event.courseIds.contains(DataUser().userCourseId);
+      }
+      return false;
+    }).toList();
   }
 }

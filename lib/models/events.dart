@@ -6,6 +6,12 @@ class Event {
   final String priority;
   final String state;
   final String description;
+  final String creatorType;
+  final bool isAdminEvent;
+  final bool isTeacherEvent;
+  final List<int> teacherIds;
+  final List<int> studentIds;
+  final List<int> courseIds;
 
   Event({
     required this.title,
@@ -15,6 +21,12 @@ class Event {
     required this.priority,
     required this.state,
     required this.description,
+    required this.creatorType,
+    required this.isAdminEvent,
+    required this.isTeacherEvent,
+    required this.teacherIds,
+    required this.studentIds,
+    required this.courseIds,
   });
 
   @override

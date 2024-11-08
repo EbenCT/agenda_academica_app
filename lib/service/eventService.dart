@@ -105,8 +105,8 @@ class EventService {
             event.teacherIds.contains(userId);
       } else if (userRole == estudiante) { // Estudiante
         return event.creatorType == 'student' ||
-            event.studentIds.contains(userId);// ||
-           // event.courseIds.contains(DataUser().userCourseId);
+            event.studentIds.contains(studentId) ||
+            event.courseIds.contains(cursoId);
       }
       return false;
     }).toList();

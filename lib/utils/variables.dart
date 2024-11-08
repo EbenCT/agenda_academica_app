@@ -1,10 +1,12 @@
 // ignore_for_file: file_names
 //'10.0.2.2:8069/jsonrpc/' 
 
+import 'package:agenda_academica/datos/datos_estudiante.dart';
+
 import '../datos/datos_user.dart';
 
 //para las consultas por http
-const ipOdoo = 'http://192.168.0.5:8069/jsonrpc/'; 
+const ipOdoo = 'http://192.168.0.3:8069/jsonrpc/'; 
 const dbName = 'prueba';
 const int superid = 2;      
 const superPassword = '1234';  
@@ -18,3 +20,7 @@ const int profesor = 67;
 final userId = DataUser().userId;
 final userRole = DataUser().userRole;
 final userPassword = DataUser().userPassword;
+
+//Data Student
+final studentId = DataStudent().studentId;
+final cursoId = DataStudent().currentCourse?['course_id'];

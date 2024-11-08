@@ -3,9 +3,17 @@
 
 import '../datos/datos_user.dart';
 
+//para las consultas por http
 const ipOdoo = 'http://192.168.0.5:8069/jsonrpc/'; 
 const dbName = 'prueba';
+const int superid = 2;        
 
+//Roles
+const int estudiante = 65;    
+const int representante = 66;
+const int profesor = 67;
+
+//Data User
 final userId = DataUser().userId;
 final userRole = DataUser().userRole;
 final userPassword = DataUser().userPassword;

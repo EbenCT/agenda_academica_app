@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../datos/datos_user.dart';
+import 'package:agenda_academica/utils/variables.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -87,13 +88,13 @@ class CustomDrawer extends StatelessWidget {
   Widget _buildUserTypeText(int userType, ThemeData theme) {
     String userTypeText = '';
     switch (userType) {
-      case 57:
+      case profesor:
         userTypeText = 'Profesor';
         break;
-      case 55:
+      case estudiante:
         userTypeText = 'Estudiante';
         break;
-      case 56:
+      case representante:
         userTypeText = 'Padre/Madre/Tutor';
         break;
       default:
@@ -110,7 +111,7 @@ class CustomDrawer extends StatelessWidget {
 
   Widget _buildMenuOptions(BuildContext context, int userType, ThemeData theme) {
     List<Widget> menuOptions = [];
-    if (userType == 57 || userType == 55) {
+    if (userType == profesor || userType == estudiante) {
       menuOptions.add(
         ListTile(
           title: const Text('Materias'),
@@ -121,7 +122,7 @@ class CustomDrawer extends StatelessWidget {
         ),
       );
     }
-    if (userType == 57) {
+    if (userType == profesor) {
       menuOptions.addAll([
         ListTile(
           title: const Text('Cursos'),
@@ -139,7 +140,7 @@ class CustomDrawer extends StatelessWidget {
         ),
       ]);
     }
-    if (userType == 56) {
+    if (userType == representante) {
       menuOptions.add(
         ListTile(
           title: const Text('Hijos'),
@@ -150,7 +151,7 @@ class CustomDrawer extends StatelessWidget {
         ),
       );
     }
-    if (userType == 55) {
+    if (userType == estudiante) {
       menuOptions.add(
         ListTile(
           title: const Text('Tareas'),

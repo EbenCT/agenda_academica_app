@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme(selectedColor: 1).getTheme(),
+      debugShowCheckedModeBanner: false,
       home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(),

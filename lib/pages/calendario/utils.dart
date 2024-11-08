@@ -3,18 +3,8 @@
 
 import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
+import '../../models/events.dart';
 
-/// Example event class.
-class Event {
-  final String title;
-  final DateTime start;
-  final DateTime end;
-
-  const Event(this.title, this.start, this.end);
-
-  @override
-  String toString() => title;
-}
 
 final kEvents = LinkedHashMap<DateTime, List<Event>>(
   equals: isSameDay,

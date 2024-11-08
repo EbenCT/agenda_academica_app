@@ -1,15 +1,13 @@
-// ignore_for_file: avoid_print, library_private_types_in_public_api
-
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../components/custom_drawer.dart';
-import 'package:http/http.dart' as http;
-import '../../utils/variables.dart';
+import '../../models/events.dart';
+import '../../service/eventService.dart';
 import 'utils.dart';
 
 class CalendarioPage extends StatefulWidget {
   const CalendarioPage({super.key});
+
   @override
   _CalendarioPageState createState() => _CalendarioPageState();
 }
@@ -17,13 +15,13 @@ class CalendarioPage extends StatefulWidget {
 class _CalendarioPageState extends State<CalendarioPage> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff; // Can be toggled on/off by longpressing a date
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-  List<Event> _apiEvents = []; // Nueva lista para eventos de la API
+  List<Event> _apiEvents = [];
+  final EventService eventService = EventService();
 
   @override
   void initState() {
@@ -31,33 +29,19 @@ class _CalendarioPageState extends State<CalendarioPage> {
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier([]);
-  _fetchEvents().then((_) {
-    _updateSelectedEvents(); // Actualiza los eventos seleccionados después de cargar los eventos de la API
-  });
+    _fetchEvents();
   }
 
-Future<void> _fetchEvents() async {
-  final response = await http.get(Uri.parse(ipOdoo));
-
-  if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
-    print(data);
-    _apiEvents = data.map((e) {
-      final title = e['title'];
-      final start = DateTime.parse(e['start']);
-      final end = DateTime.parse(e['end']);
-      return Event(title, start, end);
-    }).toList();
-    print(_apiEvents);
-    // Actualizar los eventos seleccionados
-    _updateSelectedEvents();
-    setState(() {}); // Actualizar el estado para reflejar los cambios
-  } else {
-    throw Exception('Failed to load events');
+  Future<void> _fetchEvents() async {
+    try {
+      _apiEvents = await eventService.fetchEvents();
+      _updateSelectedEvents();
+    } catch (e) {
+      print("Error al cargar eventos: $e");
+    }
   }
-}
 
-   void _updateSelectedEvents() {
+  void _updateSelectedEvents() {
     if (_selectedDay != null) {
       _selectedEvents.value = _getEventsForDay(_selectedDay!);
     } else if (_rangeStart != null && _rangeEnd != null) {
@@ -71,34 +55,22 @@ Future<void> _fetchEvents() async {
     super.dispose();
   }
 
-List<Event> _getEventsForDay(DateTime day) {
-  final List<Event> events = [...kEvents[day] ?? []];
-  print('Events from kEvents for day $day: $events');
+  List<Event> _getEventsForDay(DateTime day) {
+    final apiEventsForDay = _apiEvents.where((event) {
+      return event.start.year == day.year &&
+          event.start.month == day.month &&
+          event.start.day == day.day;
+    }).toList();
 
-  final List<Event> apiEventsForDay = _apiEvents.where((event) {
-    final isSameDay = event.start.year == day.year &&
-        event.start.month == day.month &&
-        event.start.day == day.day;
-    print('Event: Title: ${event.title}, Start: ${event.start}, End: ${event.end}, isSameDay: $isSameDay');
-    return isSameDay;
-  }).toList();
-  print('API Events for day $day: $apiEventsForDay');
-
-  events.addAll(apiEventsForDay);
-  print('All Events for day $day: $events');
-  return events;
-}
-
-
-
+    return apiEventsForDay;
+  }
 
   List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    final List<DateTime> days = daysInRange(start, end);
-    final List<Event> events = [];
+    final days = daysInRange(start, end);
+    final events = <Event>[];
 
     for (final day in days) {
-      events.addAll(_apiEvents);
-      events.addAll(kEvents[day] ?? []);
+      events.addAll(_getEventsForDay(day));
     }
 
     return events;
@@ -134,9 +106,9 @@ List<Event> _getEventsForDay(DateTime day) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calentario'),
+        title: const Text('Calendario'),
       ),
-      drawer:  CustomDrawer(),
+      drawer: CustomDrawer(),
       body: Column(
         children: [
           TableCalendar<Event>(
@@ -151,7 +123,6 @@ List<Event> _getEventsForDay(DateTime day) {
             eventLoader: _getEventsForDay,
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: const CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
               outsideDaysVisible: false,
             ),
             onDaySelected: _onDaySelected,
@@ -175,6 +146,7 @@ List<Event> _getEventsForDay(DateTime day) {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
+                    final event = value[index];
                     return Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12.0,
@@ -185,8 +157,11 @@ List<Event> _getEventsForDay(DateTime day) {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
+                        title: Text(event.title),
+                        subtitle: Text(
+                          'Tipo: ${event.eventType}, Prioridad: ${event.priority}, Estado: ${event.state}\nInicio: ${event.start}\nFin: ${event.end}',
+                        ),
+                        onTap: () => print('Evento: ${event.title}'),
                       ),
                     );
                   },

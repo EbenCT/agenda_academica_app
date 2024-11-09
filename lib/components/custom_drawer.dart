@@ -3,6 +3,8 @@ import '../datos/datos_user.dart';
 import 'package:agenda_academica/utils/variables.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -1,3 +1,4 @@
+import 'package:agenda_academica/pages/comunicados/comunicados.dart';
 import 'package:agenda_academica/pages/cursos.dart';
 import 'package:agenda_academica/pages/materias/materias.dart';
 import 'package:agenda_academica/pages/perfil.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         '/hijos':(context) => const ChildPage(),
         '/perfil':(context) => ProfilePage(),
         '/materias':(context) => const MateriasPage(),
-        '/cursos':(context) => const CursosPage()
+        '/cursos':(context) => const CursosPage(),
+        '/comunicados':(context) => const ComunicadosPage()
       }
     );
   }

@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:agenda_academica/service/eventService.dart';
+import 'package:agenda_academica/utils/variables.dart';
 import 'package:flutter/material.dart';
-import '../components/custom_drawer.dart';
+import '../../components/custom_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_html/flutter_html.dart';
 
-import '../models/events.dart';
+import '../../models/events.dart';
+import 'componentes/descripcion.dart';
 
 class ComunicadosPage extends StatefulWidget {
   const ComunicadosPage({super.key});
@@ -82,52 +81,9 @@ class _ComunicadosPageState extends State<ComunicadosPage> {
                           style: theme.textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 10),
-                        Html(
-                          data: comunicado.description,
-                          onLinkTap: (String? url, RenderContext context, Map<String, String> attributes, _) {
-                            if (url != null) {
-                              _launchURL(url);
-                            }
-                          },
-                          onImageTap: (String? src, RenderContext context, Map<String, String> attributes, _) {
-                            // Aquí puedes hacer algo al tocar una imagen (si lo necesitas)
-                          },
-                          style: {
-                            "p": Style(
-                              color: theme.colorScheme.onBackground,
-                            ),
-                          },
-                          customRender: {
-                            "video": (RenderContext context, Widget child) {
-                              final videoUrl = context.tree.element?.attributes['src'];
-                              return GestureDetector(
-                                onTap: () {
-                                  if (videoUrl != null) _launchURL(videoUrl);
-                                },
-                                child: Text(
-                                  'Ver video',
-                                  style: TextStyle(color: theme.colorScheme.secondary),
-                                ),
-                              );
-                            },
-                            "file": (RenderContext context, Widget child) {
-                              final fileData = context.tree.element?.attributes['data-embedded-props'];
-                              if (fileData != null) {
-                                final decodedData = jsonDecode(fileData);
-                                final fileUrl = decodedData['fileData']['url'];
-                                return ElevatedButton(
-                                  onPressed: () {
-                                    if (fileUrl != null) _launchURL(fileUrl);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: theme.colorScheme.primary,
-                                  ),
-                                  child: Text('Descargar archivo'),
-                                );
-                              }
-                              return Container();
-                            }
-                          },
+                        ContentViewer(
+                          htmlContent: comunicado.description,
+                          baseUrl: ipOdoo, // Ajusta según tu configuración
                         ),
                       ],
                     ),

@@ -64,29 +64,29 @@ class _MateriasProfePageState extends State<MateriasProfePage> {
       ),
       drawer: CustomDrawer(),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: materias.length,
               itemBuilder: (context, index) {
                 final materia = materias[index];
                 return Card(
                   margin: const EdgeInsets.all(8.0),
-                  color: theme.colorScheme.background,
+                  color: theme.colorScheme.surface,
                   child: ListTile(
                     title: Text(
                       materia['name'],
-                      style: theme.textTheme.headline6,
+                      style: theme.textTheme.titleLarge,
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Código: ${materia['code']}',
-                          style: theme.textTheme.bodyText2,
+                          style: theme.textTheme.bodyMedium,
                         ),
                         Text(
                           'Descripción: ${materia['description']}',
-                          style: theme.textTheme.bodyText2,
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ],
                     ),

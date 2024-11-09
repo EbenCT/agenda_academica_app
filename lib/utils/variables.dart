@@ -8,7 +8,7 @@ import 'package:agenda_academica/datos/datos_profesor.dart';
 import '../datos/datos_user.dart';
 
 //para las consultas por http
-const ipOdoo = 'http://192.168.0.3:8069/jsonrpc/'; 
+const ipOdoo = 'http://192.168.0.3:8069/jsonrpc'; 
 const dbName = 'prueba';
 const int superid = 2;      
 const superPassword = '1234';  

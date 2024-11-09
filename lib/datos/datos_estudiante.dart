@@ -19,7 +19,6 @@ class DataStudent {
   String? medicalConditions;
   String? allergies;
   Map<String, dynamic>? parentInfo;
-  Map<String, dynamic>? secondaryParentInfo;
   String? status;
   bool? isActive;
 
@@ -48,14 +47,13 @@ class DataStudent {
       "course_name": data['current_course_id'][1]
     };
     courseIds = List<int>.from(data['course_ids'] ?? []);
-    bloodType = data['blood_type'];
-    medicalConditions = data['medical_conditions'];
-    allergies = data['allergies'];
+    bloodType = data['blood_type'].toString();
+    medicalConditions = data['medical_conditions'].toString();
+    allergies = data['allergies'].toString();
     parentInfo = {
       "parent_id": data['parent_id'][0],
       "parent_name": data['parent_id'][1]
     };
-    secondaryParentInfo = data['secondary_parent_id'];
     status = data['status'];
     isActive = data['active'];
   }

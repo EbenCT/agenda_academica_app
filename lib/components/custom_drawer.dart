@@ -111,7 +111,7 @@ class CustomDrawer extends StatelessWidget {
 
   Widget _buildMenuOptions(BuildContext context, int userType, ThemeData theme) {
     List<Widget> menuOptions = [];
-    if (userType == profesor || userType == estudiante) {
+    if (userType == estudiante) {
       menuOptions.add(
         ListTile(
           title: const Text('Materias'),

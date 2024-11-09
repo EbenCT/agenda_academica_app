@@ -1,3 +1,6 @@
+import 'package:agenda_academica/pages/cursos.dart';
+import 'package:agenda_academica/pages/materias/materias.dart';
+import 'package:agenda_academica/pages/perfil.dart';
 import 'package:flutter/material.dart';
 
 import 'config/app_theme.dart';
@@ -23,7 +26,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/calendario': (context) => const CalendarioPage(),
-        '/hijos':(context) => const ChildPage()
+        '/hijos':(context) => const ChildPage(),
+        '/perfil':(context) => ProfilePage(),
+        '/materias':(context) => const MateriasPage(),
+        '/cursos':(context) => const CursosPage()
       }
     );
   }

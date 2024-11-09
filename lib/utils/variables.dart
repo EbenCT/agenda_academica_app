@@ -2,6 +2,8 @@
 //'10.0.2.2:8069/jsonrpc/' 
 
 import 'package:agenda_academica/datos/datos_estudiante.dart';
+import 'package:agenda_academica/datos/datos_padre.dart';
+import 'package:agenda_academica/datos/datos_profesor.dart';
 
 import '../datos/datos_user.dart';
 
@@ -24,3 +26,10 @@ final userPassword = DataUser().userPassword;
 //Data Student
 final studentId = DataStudent().studentId;
 final cursoId = DataStudent().currentCourse?['course_id'];
+
+//Data Teacher
+final profeId = DataTeacher().teacherId;
+List<int>? courseIds = DataTeacher().courseIds;
+
+//Data Padre
+final padreId = DataParent().parentId;

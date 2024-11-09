@@ -12,6 +12,7 @@ class Event {
   final List<int> teacherIds;
   final List<int> studentIds;
   final List<int> courseIds;
+  final List<dynamic> responsibleId;
 
   Event({
     required this.title,
@@ -26,7 +27,8 @@ class Event {
     required this.isTeacherEvent,
     required this.teacherIds,
     required this.studentIds,
-    required this.courseIds,
+    required this.courseIds, 
+    required this.responsibleId,
   });
 
   @override

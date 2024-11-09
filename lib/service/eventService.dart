@@ -35,7 +35,8 @@ class EventService {
               "is_teacher_event",
               "teacher_ids",
               "student_ids",
-              "course_ids"
+              "course_ids",
+              "responsible_id"
             ]
           }
         ]
@@ -67,6 +68,7 @@ class EventService {
         final teacherIds = List<int>.from(eventData['teacher_ids'] ?? []);
         final studentIds = List<int>.from(eventData['student_ids'] ?? []);
         final courseIds = List<int>.from(eventData['course_ids'] ?? []);
+        final responsibleId = List<dynamic>.from(eventData['responsible_id']??[]);
 
         return Event(
           title: name,
@@ -82,6 +84,7 @@ class EventService {
           teacherIds: teacherIds,
           studentIds: studentIds,
           courseIds: courseIds,
+          responsibleId: responsibleId,
         );
       }).toList();
 
@@ -102,7 +105,7 @@ class EventService {
       } else if (userRole == profesor) { // Profesor
         return event.isTeacherEvent ||
             event.creatorType == 'teacher' ||
-            event.teacherIds.contains(userId);
+            event.teacherIds.contains(profeId);
       } else if (userRole == estudiante) { // Estudiante
         return event.creatorType == 'student' ||
             event.studentIds.contains(studentId) ||

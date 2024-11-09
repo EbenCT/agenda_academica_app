@@ -5,6 +5,8 @@ import 'package:agenda_academica/utils/variables.dart';
 import 'package:http/http.dart' as http;
 
 import '../datos/datos_estudiante.dart';
+import '../datos/datos_padre.dart';
+import '../datos/datos_profesor.dart';
 
 class AuthService {
 
@@ -93,11 +95,13 @@ class AuthService {
 
           // Verifica el tipo de usuario con base en el contenido de groups_id
           if (groups.contains(estudiante)) {
-            saveDataStudent(userId);
+            await saveDataStudent(userId);
             return estudiante;  //estudiante
           } else if (groups.contains(representante)) {
+            await saveDataParent(userId);
             return representante;  //padre/representante
           } else if (groups.contains(profesor)) {
+            await saveDataTeacher(userId);
             return profesor;  //profesor
           } else {
             return 1;   //admin
@@ -155,6 +159,90 @@ class AuthService {
       }
     } else {
       throw Exception('Failed to fetch student data');
+    }
+  }
+
+  Future<void> saveDataTeacher(int userId) async {
+    final url = Uri.parse(ipOdoo);
+
+    final requestBody = {
+      "jsonrpc": "2.0",
+      "method": "call",
+      "params": {
+        "service": "object",
+        "method": "execute_kw",
+        "args": [
+          dbName,          // Nombre de la base de datos
+          superid,         // ID del usuario autenticado
+          superPassword,    // Contraseña del usuario
+          "academy.teacher",  // Modelo en Odoo
+          "search_read",      // Método para leer datos
+          [[["user_id", "=", userId]]]
+        ]
+      },
+      "id": 1
+    };
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> result = data["result"];
+
+      if (result.isNotEmpty) {
+        final teacherData = result[0];
+
+        // Guardar los datos del profesor en DataTeacher
+        DataTeacher().setData(teacherData);
+      }
+    } else {
+      throw Exception('Failed to fetch teacher data');
+    }
+  }
+
+  Future<void> saveDataParent(int userId) async {
+    final url = Uri.parse(ipOdoo);
+
+    final requestBody = {
+      "jsonrpc": "2.0",
+      "method": "call",
+      "params": {
+        "service": "object",
+        "method": "execute_kw",
+        "args": [
+          dbName,          // Nombre de la base de datos
+          superid,         // ID del usuario autenticado
+          superPassword,    // Contraseña del usuario
+          "academy.parent", // Modelo en Odoo
+          "search_read",    // Método para leer datos
+          [[["user_id", "=", userId]]]
+        ]
+      },
+      "id": 1
+    };
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> result = data["result"];
+
+      if (result.isNotEmpty) {
+        final parentData = result[0];
+
+        // Guardar los datos del padre en DataParent
+        DataParent().setData(parentData);
+      }
+    } else {
+      throw Exception('Failed to fetch parent data');
     }
   }
 }

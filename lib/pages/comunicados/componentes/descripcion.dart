@@ -159,9 +159,12 @@ class ContentViewer extends StatelessWidget {
                   try {
                     final embedProps = element?.attributes['data-embedded-props'] ?? '';
                     final fileData = jsonDecode(embedProps)['fileData'];
+                    print(fileData);
                     final fileName = fileData['filename'] as String;
                     final fileUrl = fileData['url'] as String;
                     final accessToken = fileData['access_token'] as String;
+                    final idDoc = fileData['id'].toString();
+                    final checksum = fileData['checksum'] as String;
                     
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -169,7 +172,7 @@ class ContentViewer extends StatelessWidget {
                         icon: const Icon(Icons.file_download),
                         label: Text('Descargar $fileName'),
                         onPressed: () {
-                          final fullUrl = '$baseUrl/web/content${fileUrl}?access_token=$accessToken';
+                          final fullUrl = '${baseUrl}web/content/$idDoc?access_token=$accessToken&filename=$fileName&unique=$checksum&download=true';
                           _launchURL(fullUrl);
                         },
                       ),

@@ -83,7 +83,7 @@ class _ComunicadosPageState extends State<ComunicadosPage> {
                         const SizedBox(height: 10),
                         ContentViewer(
                           htmlContent: comunicado.description,
-                          baseUrl: ipOdoo, // Ajusta según tu configuración
+                          baseUrl: rutaOdoo, // Ajusta según tu configuración
                         ),
                       ],
                     ),

@@ -13,6 +13,9 @@ const dbName = 'prueba';
 const int superid = 2;      
 const superPassword = '1234';  
 
+//para visualizar elementos en los comunicados:
+const rutaOdoo = 'http://192.168.0.3:8069/';
+
 //Roles
 const int estudiante = 65;    
 const int representante = 66;

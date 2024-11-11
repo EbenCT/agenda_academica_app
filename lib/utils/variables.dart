@@ -13,6 +13,10 @@ const dbName = 'prueba';
 const int superid = 2;      
 const superPassword = '1234';  
 
+//Para la conexion con ChatGPT
+const apiKeyGPT = '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';
+const apiKeyGemini = 'AIzaSyDHoVrUXtuWLLVFHDlS8xumQFjL-_TS_Dg';
+
 //para visualizar elementos en los comunicados:
 const rutaOdoo = 'http://192.168.0.3:8069/';
 

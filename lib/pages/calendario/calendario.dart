@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../components/custom_drawer.dart';
 import '../../models/events.dart';
 import '../../service/eventService.dart';
+import 'conexionGPT/conexion-gpt.dart';
 import 'utils.dart';
 
 class CalendarioPage extends StatefulWidget {
@@ -23,13 +25,60 @@ class _CalendarioPageState extends State<CalendarioPage> {
   List<Event> _apiEvents = [];
   final EventService eventService = EventService();
 
+  // Agregar variables para speech to text
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  String _text = '';
+
   @override
   void initState() {
     super.initState();
-
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier([]);
     _fetchEvents();
+    _initSpeech();
+  }
+
+  // Inicializar el reconocimiento de voz
+  void _initSpeech() async {
+    bool available = await _speech.initialize(
+      onStatus: (status) => print('Status: $status'),
+      onError: (errorNotification) => print('Error: $errorNotification'),
+    );
+    if (!available) {
+      print("El dispositivo no soporta reconocimiento de voz");
+    }
+  }
+
+  // Función para manejar la captura de voz
+  void _startListening() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize();
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (result) {
+            setState(() {
+              _text = result.recognizedWords;
+              if (result.finalResult) {
+                _isListening = false;
+                _processVoiceCommand(_text);
+              }
+            });
+          },
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
+  // Función para procesar el comando de voz
+  void _processVoiceCommand(String command) {
+    // Aquí puedes agregar la lógica para procesar el comando de voz
+    print('Comando de voz recibido: $command');
+    getEventDetailsFromAI(command);
   }
 
   Future<void> _fetchEvents() async {
@@ -102,7 +151,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
     _updateSelectedEvents();
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -170,6 +219,12 @@ class _CalendarioPageState extends State<CalendarioPage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _startListening,
+        label: Text(_isListening ? 'Escuchando...' : 'Crear con IA'),
+        icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+        backgroundColor: _isListening ? Colors.red : Colors.blue,
       ),
     );
   }

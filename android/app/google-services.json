@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "930488743709",
+    "project_id": "sw1-calendar-academy",
+    "storage_bucket": "sw1-calendar-academy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930488743709:android:233cb3d580cdb0e6f0d3f4",
+        "android_client_info": {
+          "package_name": "com.example.agenda_academica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIYQUNE5gIirGW-jCEYC6Td8lqxcrmnLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

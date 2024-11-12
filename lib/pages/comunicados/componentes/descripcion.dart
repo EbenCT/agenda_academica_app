@@ -217,7 +217,7 @@ class ContentViewer extends StatelessWidget {
                     final fileData = jsonDecode(embedProps)['fileData'];
                     print(fileData);
                     final fileName = fileData['filename'] as String;
-                    final fileUrl = fileData['url'] as String;
+                    //final fileUrl = fileData['url'] as String;
                     final accessToken = fileData['access_token'] as String;
                     final idDoc = fileData['id'].toString();
                     final checksum = fileData['checksum'] as String;

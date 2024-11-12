@@ -78,7 +78,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
   void _processVoiceCommand(String command) {
     // Aquí puedes agregar la lógica para procesar el comando de voz
     print('Comando de voz recibido: $command');
-    getEventDetailsFromAI(command);
+    getEventDetailsFromAI(command, context);
   }
 
   Future<void> _fetchEvents() async {

@@ -33,6 +33,24 @@ class ContentViewer extends StatelessWidget {
     }
   }
 
+    String _processImageUrl(String imageUrl) {
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+
+    // Si la URL contiene "-redirect", extraemos la parte final de la URL
+    if (imageUrl.contains('-redirect')) {
+      final parts = imageUrl.split('-redirect/');
+      if (parts.length > 1) {
+        // Construimos la URL directa
+        return parts[1];
+      }
+    }
+
+    // Para imágenes subidas a Odoo con access_token
+    return baseUrl + (imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -58,9 +76,8 @@ class ContentViewer extends StatelessWidget {
           builder: (extensionContext) {
             final imageUrl = extensionContext.element?.attributes['src'];
             if (imageUrl != null) {
-              final fullUrl = imageUrl.startsWith('http') 
-                  ? imageUrl 
-                  : baseUrl + (imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl);
+              final fullUrl = _processImageUrl(imageUrl);
+              debugPrint('Processed image URL: $fullUrl'); // Para debugging
               
               return Builder(
                 builder: (context) => GestureDetector(
@@ -68,28 +85,49 @@ class ContentViewer extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (BuildContext dialogContext) => Dialog(
-                        child: Image.network(
-                          fullUrl,
-                          headers: const {
-                            'Accept': 'image/*',
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded / 
-                                      loadingProgress.expectedTotalBytes!
-                                    : null,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.network(
+                                fullUrl,
+                                headers: const {
+                                  'Accept': 'image/*',
+                                },
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded / 
+                                            loadingProgress.expectedTotalBytes!
+                                          : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  debugPrint('Error loading image: $error');
+                                  return const Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.error_outline, 
+                                             color: Colors.red, 
+                                             size: 50),
+                                        SizedBox(height: 8),
+                                        Text('Error al cargar la imagen',
+                                             style: TextStyle(color: Colors.red)),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            debugPrint('Error loading image: $error');
-                            return const Center(
-                              child: Icon(Icons.error_outline, color: Colors.red, size: 50)
-                            );
-                          },
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Cerrar'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -112,8 +150,26 @@ class ContentViewer extends StatelessWidget {
                     },
                     errorBuilder: (context, error, stackTrace) {
                       debugPrint('Error loading image: $error');
-                      return const Center(
-                        child: Icon(Icons.error_outline, color: Colors.red, size: 50)
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red.withOpacity(0.5)),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.error_outline, 
+                                 color: Colors.red, 
+                                 size: 30),
+                            SizedBox(height: 4),
+                            Text('Error al cargar la imagen',
+                                 style: TextStyle(
+                                   color: Colors.red,
+                                   fontSize: 12,
+                                 )),
+                          ],
+                        ),
                       );
                     },
                   ),

@@ -1,7 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../datos/datos_user.dart';
+import '../notificaciones/bloc/notifications_bloc.dart';
 import '../service/authService.dart'; // Importa el servicio de autenticación
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   void _login() async {
     final email = emailController.text;
     final password = passwordController.text;
-
+    
     // Llamada a la función login en AuthService
     final userId = await authService.login(email, password);
     print("Id del user: $userId");
@@ -27,10 +29,10 @@ class _LoginPageState extends State<LoginPage> {
     if (userId != null) {
       final role = await authService.checkRolUser(userId, password);
       print("Rol del usuario: $role");
-
+      
       // Almacenar userId y role en shared_preferences
       await DataUser().saveUserData(userId, role, password);
-    
+      registerTokenDevice();
       Navigator.pushNamed(context, '/calendario');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +107,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
-                    onPressed: _login,
+                    onPressed:() async {
+                      _login(); // Llamada a la función _login
+                      context.read<NotificationsBloc>().requestPermission();
+                    } ,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.primary,
                       padding: const EdgeInsets.symmetric(

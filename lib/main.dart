@@ -13,6 +13,8 @@ import 'pages/hijos.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationsBloc.initializeFCM();
+
   runApp(
     MultiBlocProvider(
       providers: [

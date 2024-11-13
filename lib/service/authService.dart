@@ -57,7 +57,6 @@ class AuthService {
 
   Future<int> checkRolUser(int userId, String password) async {
     final url = Uri.parse(ipOdoo);
-
     final requestBody = {
       "jsonrpc": "2.0",
       "method": "call",
@@ -244,5 +243,37 @@ class AuthService {
     } else {
       throw Exception('Failed to fetch parent data');
     }
+  }
+}
+
+Future<void> registerTokenDevice() async {
+  // Define los datos de la solicitud
+  final Map<String, dynamic> requestData = {
+    "token": tokenDevice,
+    "device_name": "Dispositivo movil $userId",
+    "user_id": userId
+  };
+
+  // Define el endpoint de la API
+  final url = Uri.parse("${rutaOdoo}api/fcm/register");
+
+  try {
+    // Envía la solicitud POST
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(requestData),
+    );
+
+    // Verifica el código de estado de la respuesta
+    if (response.statusCode == 200) {
+      print("Token registrado exitosamente: ${response.body}");
+    } else {
+      print("Error al registrar el token: ${response.statusCode} - ${response.body}");
+    }
+  } catch (e) {
+    print("Error en la solicitud: $e");
   }
 }

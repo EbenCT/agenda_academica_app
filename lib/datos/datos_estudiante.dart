@@ -33,15 +33,15 @@ class DataStudent {
     studentId = data['id'];
     image = data['image'].toString();
     enrollmentIds = List<int>.from(data['enrollment_ids'] ?? []);
-    name = data['name'];
-    identification = data['identification'];
-    birthDate = data['birth_date'];
-    gender = data['gender'];
+    name = data['name'].toString();
+    identification = data['identification'].toString();
+    birthDate = data['birth_date'].toString();
+    gender = data['gender'].toString();
     age = data['age'];
-    email = data['email'];
-    phone = data['phone'];
-    address = data['address'];
-    enrollmentDate = data['enrollment_date'];
+    email = data['email'].toString();
+    phone = data['phone'].toString();
+    address = data['address'].toString();
+    enrollmentDate = data['enrollment_date'].toString();
     currentCourse = {
       "course_id": data['current_course_id'][0],
       "course_name": data['current_course_id'][1]

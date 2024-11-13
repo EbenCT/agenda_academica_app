@@ -8,7 +8,7 @@ import 'package:agenda_academica/datos/datos_profesor.dart';
 import '../datos/datos_user.dart';
 
 //para las consultas por http
-const ipOdoo = 'http://165.227.176.190/jsonrpc'; // http://192.168.0.3:8069/jsonrpc
+const ipOdoo = 'http://192.168.0.3:8069/jsonrpc'; // http://192.168.0.3:8069/jsonrpc  165.227.176.190
 const dbName = 'partial';        // prueba
 const int superid = 2;          //2
 const superPassword = 'admin';   // 1234
@@ -18,7 +18,7 @@ const apiKeyGPT = 'sk-proj-xIltQOdJG9pfhvbgA6M0Yr54xUr4-Mhe_Pvp1NpfUdw94JSOhWoj4
 const apiKeyGemini = 'AIzaSyDHoVrUXtuWLLVFHDlS8xumQFjL-_TS_Dg';
 
 //para visualizar elementos en los comunicados:
-const rutaOdoo = 'http://165.227.176.190/';  // http://192.168.0.3:8069/
+const rutaOdoo = 'http://192.168.0.3:8069/';  // http://192.168.0.3:8069/   165.227.176.190
 
 //Roles
 const int estudiante = 15;      //65
@@ -40,3 +40,6 @@ List<int>? courseIds = DataTeacher().courseIds;
 
 //Data Padre
 final padreId = DataParent().parentId;
+
+//Para las notificaciones
+String tokenDevice = '';

@@ -1,6 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../datos/datos_user.dart';
 import 'package:agenda_academica/utils/variables.dart';
+
+import '../notificaciones/bloc/notifications_bloc.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -81,6 +85,23 @@ class CustomDrawer extends StatelessWidget {
                 (Route<dynamic> route) => false,
               );
             },
+          ),
+          const Divider(),
+          // Switch para activar/desactivar notificaciones
+          ListTile(
+            title: Text('Activar Notificaciones', style: theme.textTheme.bodyLarge),
+            trailing: BlocBuilder<NotificationsBloc, NotificationsState>(
+              builder: (context, state) {
+                return Switch(
+                  value: state.status == AuthorizationStatus.authorized,
+                  onChanged: (bool value) {
+                    // Solicita permisos cuando se cambia el Switch
+                    context.read<NotificationsBloc>().requestPermission();
+                  },
+                  activeColor: theme.colorScheme.primary,
+                );
+              },
+            ),
           ),
         ],
       ),

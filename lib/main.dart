@@ -1,16 +1,28 @@
+import 'package:agenda_academica/notificaciones/bloc/notifications_bloc.dart';
 import 'package:agenda_academica/pages/comunicados/comunicados.dart';
 import 'package:agenda_academica/pages/cursos.dart';
 import 'package:agenda_academica/pages/materias/materias.dart';
 import 'package:agenda_academica/pages/perfil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'config/app_theme.dart';
 import 'pages/calendario/calendario.dart';
 import 'pages/login.dart';
 import 'pages/hijos.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationsBloc.initializeFCM();
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => NotificationsBloc())
+      ], 
+      child: const MyApp()
+    )  
+  );
 }
 
 class MyApp extends StatelessWidget {

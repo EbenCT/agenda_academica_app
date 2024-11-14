@@ -36,7 +36,9 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.6
   flutter_html: ^3.0.0-alpha.5
+  googleapis_auth: ^1.6.0
   http: ^1.2.2
+  image_picker: ^1.1.2
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   speech_to_text: ^7.0.0

@@ -97,21 +97,27 @@ class EventService {
     }
   }
 
-  List<Event> _filterEventsByUserRole(List<Event> events) {
+Future<List<Event>> _filterEventsByUserRole(List<Event> events) async {
+  // Obtener los IDs de hijos
+  final List<int> hijosIdsList = await hijosIds ?? [];
 
-    return events.where((event) {
-      if (userRole == 1) { // Administrador
-        return event.isAdminEvent || event.creatorType == 'admin';
-      } else if (userRole == profesor) { // Profesor
-        return event.isTeacherEvent ||
-            event.creatorType == 'teacher' ||
-            event.teacherIds.contains(profeId);
-      } else if (userRole == estudiante) { // Estudiante
-        return event.creatorType == 'student' ||
-            event.studentIds.contains(studentId) ||
-            event.courseIds.contains(cursoId);
-      }
-      return false;
-    }).toList();
-  }
+  return events.where((event) {
+    if (userRole == 1) { // Administrador
+      return event.isAdminEvent || event.creatorType == 'admin';
+    } else if (userRole == profesor) { // Profesor
+      return event.isTeacherEvent ||
+          event.creatorType == 'teacher' ||
+          event.teacherIds.contains(profeId);
+    } else if (userRole == estudiante) { // Estudiante
+      return event.creatorType == 'student' ||
+          event.studentIds.contains(studentId) ||
+          event.courseIds.contains(cursoId);
+    } else if (userRole == representante) {
+      // Filtrar eventos que contengan al menos un `studentId` de `hijosIdsList`
+      return hijosIdsList.any((id) => event.studentIds.contains(id));
+    }  
+    return false;
+  }).toList();
+}
+
 }

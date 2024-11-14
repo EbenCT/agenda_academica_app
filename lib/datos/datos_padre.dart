@@ -27,10 +27,10 @@ class DataParent {
     email = data['email'];
     phone = data['phone'];
     mobile = data['mobile'];
-    address = data['address'];
-    occupation = data['occupation'];
-    workplace = data['workplace'];
-    workPhone = data['work_phone'];
+    address = data['address'].toString();
+    occupation = data['occupation'].toString();
+    workplace = data['workplace'].toString();
+    workPhone = data['work_phone'].toString();
     studentIds = List<int>.from(data['student_ids'] ?? []);
   }
 }

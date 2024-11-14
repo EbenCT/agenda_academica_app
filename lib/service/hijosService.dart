@@ -20,7 +20,7 @@ class HijosService {
         "args": [
           dbName,
           superid,
-          userPassword,
+          superPassword,
           "academy.parent",
           "search_read",
           [[["user_id", "=", userId]]]
@@ -63,7 +63,7 @@ class HijosService {
         "args": [
           dbName,
           superid,
-          userPassword,
+          superPassword,
           "academy.enrollment",
           "search_read",
           [[["student_id", "=", studentId]]]

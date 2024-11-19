@@ -49,8 +49,8 @@ Future<void> getEventDetailsFromAI(String inputText, BuildContext context) async
     final candidates = data['candidates'];
     if (candidates != null && candidates.isNotEmpty) {
       var eventJsonText = candidates[0]['content']['parts'][0]['text'];
-      eventJsonText = eventJsonText.replaceAll(RegExp(r'^```json|```$'), '').trim();
-      print(eventJsonText);
+      eventJsonText = eventJsonText.replaceAll(RegExp(r'^```json\s*|\s*```$', multiLine: true), '').trim();
+      print("eventJsonText: $eventJsonText");
       try {
         final eventDetails = jsonDecode(eventJsonText);
         await createEvent(eventDetails, context); // Pasar `context` a `createEvent`
